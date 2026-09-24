@@ -22,7 +22,7 @@ export default function NavLinks() {
     .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 
   return (
-    <nav>
+    <nav aria-label="Main">
       <ul className="flex gap-6">
         {links.map((link) => {
           const isActive = link.href === activeHref;
