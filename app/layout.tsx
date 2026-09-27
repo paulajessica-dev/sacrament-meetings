@@ -27,8 +27,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${lora.variable}`}>
       <body>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-white focus:text-ward focus:px-4 focus:py-2 focus:rounded"
+        >
+          Skip to main content
+        </a>
         <Header />
-        <main className="max-w-4xl mx-auto px-4 py-8">{children}</main>
+        <main id="main-content" className="max-w-4xl mx-auto px-4 py-8">{children}</main>
         <Footer />
       </body>
     </html>

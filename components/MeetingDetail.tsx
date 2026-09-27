@@ -16,7 +16,7 @@ export default function MeetingDetail({ meeting }: MeetingDetailProps) {
   const musicalNumbers = meeting.speakers.filter((item) => item.type === 'musical-number');
 
   return (
-    <article className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow print:shadow-none print:p-0">
+    <article className="max-w-2xl mx-auto bg-white text-gray-900 p-8 rounded-lg shadow print:shadow-none print:p-0">
       <header className="text-center mb-6 border-b pb-4">
         <h2 className="text-2xl font-bold font-serif">Sacrament Meeting</h2>
         <p className="text-gray-600">{formattedDate}</p>
