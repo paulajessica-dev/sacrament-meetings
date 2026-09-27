@@ -31,7 +31,7 @@ export default async function MeetingsPage(props: {
 
   return (
     <div>
-      <Suspense fallback={<div className="mb-4 h-10" />}>
+      <Suspense fallback={<div className="mb-6 h-11" />}>
         <MeetingSearch />
       </Suspense>
 
@@ -40,7 +40,13 @@ export default async function MeetingsPage(props: {
           No meetings found.
         </p>
       ) : (
-        meetings.map((m) => <MeetingCard key={m.id} meeting={m} />)
+        <ul className="flex flex-col gap-4">
+          {meetings.map((m) => (
+            <li key={m.id}>
+              <MeetingCard meeting={m} />
+            </li>
+          ))}
+        </ul>
       )}
 
       <Suspense fallback={null}>
