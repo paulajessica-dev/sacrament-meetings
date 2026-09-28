@@ -164,7 +164,7 @@ export async function createMeeting(
     await addMeeting(toMeetingInput(parsed.data));
   } catch (error) {
     console.error('createMeeting failed:', error);
-    return { message: 'Database error: failed to create the meeting.', values };
+    throw new Error('Failed to create the meeting. Please try again.');
   }
 
   revalidateMeetingPages();
@@ -198,7 +198,7 @@ export async function updateMeeting(
     }
   } catch (error) {
     console.error('updateMeeting failed:', error);
-    return { message: 'Database error: failed to update the meeting.', values };
+    throw new Error('Failed to update the meeting. Please try again.');
   }
 
   revalidateMeetingPages(id);
