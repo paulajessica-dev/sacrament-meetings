@@ -144,6 +144,7 @@ function revalidateMeetingPages(id?: number) {
   if (id) revalidatePath(`/meetings/${id}`);
 }
 
+
 export async function createMeeting(
   prevState: MeetingFormState,
   formData: FormData
