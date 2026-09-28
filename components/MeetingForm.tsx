@@ -20,11 +20,14 @@ const inputClass =
   'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-ward focus:outline-none focus:ring-2 focus:ring-ward/30';
 
 function FieldError({ id, errors }: { id: string; errors?: string[] }) {
-  if (!errors?.length) return null;
   return (
-    <p id={`${id}-error`} className="mt-1 text-sm text-red-600">
-      {errors[0]}
-    </p>
+    <div id={`${id}-error`} aria-live="polite" aria-atomic="true">
+      {errors?.map((message) => (
+        <p key={message} className="mt-1 text-sm text-red-600">
+          {message}
+        </p>
+      ))}
+    </div>
   );
 }
 
@@ -52,7 +55,7 @@ function TextField({
         type={type}
         defaultValue={defaultValue}
         aria-invalid={errors?.length ? true : undefined}
-        aria-describedby={errors?.length ? `${name}-error` : undefined}
+        aria-describedby={`${name}-error`}
         className={inputClass}
       />
       <FieldError id={name} errors={errors} />
@@ -96,11 +99,13 @@ function ListField({
   label,
   hint,
   defaultValue,
+  errors,
 }: {
   name: string;
   label: string;
   hint: string;
   defaultValue?: string;
+  errors?: string[];
 }) {
   return (
     <div>
@@ -115,9 +120,11 @@ function ListField({
         name={name}
         rows={3}
         defaultValue={defaultValue}
-        aria-describedby={`${name}-hint`}
+        aria-invalid={errors?.length ? true : undefined}
+        aria-describedby={`${name}-hint ${name}-error`}
         className={inputClass}
       />
+      <FieldError id={name} errors={errors} />
     </div>
   );
 }
@@ -173,7 +180,7 @@ export default function MeetingForm({ action, meeting, submitLabel }: MeetingFor
             name="meetingType"
             defaultValue={v.meetingType}
             aria-invalid={state.errors?.meetingType ? true : undefined}
-            aria-describedby={state.errors?.meetingType ? 'meetingType-error' : undefined}
+            aria-describedby="meetingType-error"
             className={inputClass}
           >
             <option value="" disabled>Select a type</option>
@@ -188,22 +195,34 @@ export default function MeetingForm({ action, meeting, submitLabel }: MeetingFor
         <TextField name="conducting" label="Conducting" defaultValue={v.conducting} errors={state.errors?.conducting} />
       </div>
 
-      <ListField name="announcements" label="Announcements" hint="One announcement per line." defaultValue={v.announcements} />
+      <ListField name="announcements" label="Announcements" hint="One announcement per line." defaultValue={v.announcements} errors={state.errors?.announcements}/>
 
       <HymnFields prefix="openingHymn" label="Opening hymn" values={v} state={state} />
       <TextField name="openingPrayer" label="Opening prayer" defaultValue={v.openingPrayer} errors={state.errors?.openingPrayer} />
 
-      <ListField name="wardBusiness" label="Ward business" hint="One item per line." defaultValue={v.wardBusiness} />
+      <ListField name="wardBusiness" label="Ward business" hint="One item per line." defaultValue={v.wardBusiness} errors={state.errors?.wardBusiness} />
 
-      <label className="flex items-center gap-2 text-sm font-medium">
-        <input type="checkbox" name="stakeBusiness" defaultChecked={v.stakeBusiness} className="h-4 w-4 accent-ward" />
-        This meeting includes stake business
-      </label>
+      <div>
+        <div className="flex items-center gap-2">
+          <input
+            id="stakeBusiness"
+            type="checkbox"
+            name="stakeBusiness"
+            defaultChecked={v.stakeBusiness}
+            aria-describedby="stakeBusiness-error"
+            className="h-4 w-4 accent-ward"
+          />
+          <label htmlFor="stakeBusiness" className="text-sm font-medium">
+            This meeting includes stake business
+          </label>
+        </div>
+        <FieldError id="stakeBusiness" errors={state.errors?.stakeBusiness} />
+      </div>
 
       <HymnFields prefix="sacramentHymn" label="Sacrament hymn" values={v} state={state} />
 
-      <ListField name="speakers" label="Speakers" hint="One per line, as: Name | Topic" defaultValue={v.speakers} />
-      <ListField name="musicalNumbers" label="Musical numbers" hint="One per line, as: Performer | Piece" defaultValue={v.musicalNumbers} />
+      <ListField name="speakers" label="Speakers" hint="One per line, as: Name | Topic" defaultValue={v.speakers} errors={state.errors?.speakers} />
+      <ListField name="musicalNumbers" label="Musical numbers" hint="One per line, as: Performer | Piece" defaultValue={v.musicalNumbers} errors={state.errors?.musicalNumbers} />
 
       <HymnFields prefix="closingHymn" label="Closing hymn" values={v} state={state} />
       <TextField name="closingPrayer" label="Closing prayer" defaultValue={v.closingPrayer} errors={state.errors?.closingPrayer} />

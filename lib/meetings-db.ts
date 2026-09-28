@@ -23,18 +23,19 @@ const DEFAULT_HYMN = { number: 0, title: 'Unknown hymn' };
 
 // Normalizes a raw DB row into a SacramentMeeting we can trust in the UI:
 // unexpected/missing values get safe fallbacks instead of crashing render.
-function mapRow(row: any): SacramentMeeting {
+function mapRow(row: Record<string, unknown>): SacramentMeeting {
+  const meeting = row as unknown as SacramentMeeting;
   return {
-    ...row,
-    meetingType: VALID_MEETING_TYPES.includes(row.meetingType)
-      ? row.meetingType
+    ...meeting,
+    meetingType: VALID_MEETING_TYPES.includes(meeting.meetingType)
+      ? meeting.meetingType
       : 'regular',
-    speakers: row.speakers ?? [],
-    wardBusiness: row.wardBusiness ?? [],
-    announcements: row.announcements ?? [],
-    openingHymn: row.openingHymn ?? DEFAULT_HYMN,
-    sacramentHymn: row.sacramentHymn ?? DEFAULT_HYMN,
-    closingHymn: row.closingHymn ?? DEFAULT_HYMN,
+    speakers: meeting.speakers ?? [],
+    wardBusiness: meeting.wardBusiness ?? [],
+    announcements: meeting.announcements ?? [],
+    openingHymn: meeting.openingHymn ?? DEFAULT_HYMN,
+    sacramentHymn: meeting.sacramentHymn ?? DEFAULT_HYMN,
+    closingHymn: meeting.closingHymn ?? DEFAULT_HYMN,
   };
 }
 
