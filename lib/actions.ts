@@ -10,6 +10,8 @@ import {
   type MeetingInput,
 } from '@/lib/meetings-db';
 import type { SpeakerItem } from '@/lib/types';
+import { AuthError } from 'next-auth';
+import { signIn, signOut } from '@/auth';
 
 
 // zod schemas for validating form input
@@ -218,3 +220,33 @@ export async function deleteMeeting(id: number): Promise<void> {
   revalidateMeetingPages(id);
 }
 
+/* ----------------------------- Authentication ----------------------------- */
+
+// Only allow redirects to pages inside this app (never to another site)
+function safeRedirectTarget(value: FormDataEntryValue | null) {
+  return typeof value === 'string' && value.startsWith('/') && !value.startsWith('//')
+    ? value
+    : '/meetings';
+}
+
+export async function authenticate(prevState: string | undefined, formData: FormData) {
+  const email = String(formData.get('email') ?? '');
+  const password = String(formData.get('password') ?? '');
+  const redirectTo = safeRedirectTarget(formData.get('redirectTo'));
+
+  try {
+    await signIn('credentials', { email, password, redirectTo });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return error.type === 'CredentialsSignin'
+        ? 'Invalid email or password.'
+        : 'Something went wrong. Please try again.';
+    }
+    // Re-throw so Next.js can handle the redirect after a successful login
+    throw error;
+  }
+}
+
+export async function logout() {
+  await signOut({ redirectTo: '/meetings' });
+}

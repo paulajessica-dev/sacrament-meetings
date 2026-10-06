@@ -14,9 +14,30 @@ const lora = Lora({
   variable: "--font-lora",
 });
 
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : 'http://localhost:3000';
+
 export const metadata: Metadata = {
-  title: "Sacrament Meeting Planner",
-  description: "Plan, manage, and review sacrament meeting agendas for Riverside Ward.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    template: '%s | Sacrament Meeting Planner',
+    default: 'Sacrament Meeting Planner',
+  },
+  description:
+    'Plan, manage, and review sacrament meeting agendas for Riverside Ward.',
+  openGraph: {
+    title: 'Sacrament Meeting Planner',
+    description:
+      'Plan, manage, and review sacrament meeting agendas for Riverside Ward.',
+    type: 'website',
+    images: [
+      {
+        url: '/sacrament-hero.jpg',
+        alt: 'Sacrament meeting at Riverside Ward',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

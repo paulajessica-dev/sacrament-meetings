@@ -13,15 +13,18 @@ export async function generateMetadata({ params }: MeetingPageProps): Promise<Me
   const { id } = await params;
 
   if (!/^\d+$/.test(id) || Number(id) > MAX_POSTGRES_INT) {
-    return { title: 'Meeting not found | Sacrament Meeting Planner' };
+    return { title: 'Meeting not found' };
   }
 
   const meeting = await getMeetingById(Number(id));
 
+  if (!meeting) {
+    return { title: 'Meeting not found' };
+  }
+
   return {
-    title: meeting
-      ? `${meeting.date} Meeting | Sacrament Meeting Planner`
-      : 'Meeting not found | Sacrament Meeting Planner',
+    title: `${meeting.date} Meeting`,
+    description: `Sacrament meeting program for ${meeting.date} at Riverside Ward.`,
   };
 }
 
