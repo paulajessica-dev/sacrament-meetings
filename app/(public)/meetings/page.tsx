@@ -7,12 +7,14 @@ import MeetingCard from '@/components/MeetingCard';
 import { Pagination } from '@/components/Pagination';
 import { parsePage } from '@/lib/parse-page';
 
+
 import Link from 'next/link';
 import { Pencil, Plus } from 'lucide-react';
 import { DeleteMeetingButton } from '@/components/DeleteMeetingButton';
 
 export const metadata: Metadata = {
-  title: 'All Meetings | Sacrament Meeting Planner',
+  title: 'Meetings',
+  description: 'Browse and search all sacrament meeting programs for Riverside Ward.',
 };
 
 export default async function MeetingsPage(props: {
